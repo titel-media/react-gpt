@@ -402,7 +402,8 @@ class Bling extends Component {
             .catch(this.onScriptError.bind(this));
     }
 
-    componentWillReceiveProps(nextProps) {
+    // eslint-disable-next-line camelcase
+    UNSAFE_componentWillReceiveProps(nextProps) {
         const {propsEqual} = Bling._config;
         const {sizeMapping} = this.props;
 
