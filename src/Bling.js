@@ -391,7 +391,6 @@ class Bling extends Component {
         this._isMounted = true;
 
         Bling._adManager.addInstance(this);
-
         Bling._adManager
             .load(Bling._config.seedFileUrl)
             .then(this.onScriptLoaded.bind(this))
@@ -733,7 +732,6 @@ class Bling extends Component {
 
     clear() {
         const adSlot = this._adSlot;
-
         if (adSlot && adSlot.hasOwnProperty("getServices")) {
             // googletag.ContentService doesn't clear content
             const services = adSlot.getServices();

@@ -15,7 +15,6 @@ export default function isInViewport(el, [width, height] = [0, 0], offset = 0) {
         bottom: window.innerHeight,
         right: window.innerWidth
     };
-
     const inViewport =
         rect.bottom >= viewport.top + height * offset &&
         rect.right >= viewport.left + width * offset &&
