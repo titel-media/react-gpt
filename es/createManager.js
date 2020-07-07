@@ -167,10 +167,7 @@ var AdManager = exports.AdManager = function (_EventEmitter) {
 
             // first instance updates correlator value and re-render each ad
             var instances = _this.getMountedInstances();
-            instances.forEach(function (instance, i) {
-                if (i === 0) {
-                    _this.updateCorrelator();
-                }
+            instances.forEach(function (instance) {
                 instance.forceUpdate();
             });
 
@@ -432,16 +429,6 @@ var AdManager = exports.AdManager = function (_EventEmitter) {
                 return false;
             }
             return this.googletag.pubads().getVersion();
-        }
-    }, {
-        key: "updateCorrelator",
-        value: function updateCorrelator() {
-            if (!this.pubadsReady) {
-                return false;
-            }
-            this.googletag.pubads().updateCorrelator();
-
-            return true;
         }
     }, {
         key: "load",

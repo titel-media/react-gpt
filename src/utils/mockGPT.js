@@ -248,6 +248,7 @@ class GPTMock {
     defineSlot(adUnitPath, size, divId) {
         const slot = new SlotMock(adUnitPath, size, divId);
         this.pubads().slots[divId] = slot;
+
         return slot;
     }
     defineOutOfPageSlot(adUnitPath, divId) {
