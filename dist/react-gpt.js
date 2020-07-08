@@ -570,7 +570,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	            this._isMounted = true;
 
 	            Bling._adManager.addInstance(this);
-
 	            Bling._adManager.load(Bling._config.seedFileUrl).then(this.onScriptLoaded.bind(this)).catch(this.onScriptError.bind(this));
 	        }
 
@@ -907,7 +906,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: "clear",
 	        value: function clear() {
 	            var adSlot = this._adSlot;
-
 	            if (adSlot && adSlot.hasOwnProperty("getServices")) {
 	                // googletag.ContentService doesn't clear content
 	                var services = adSlot.getServices();
@@ -1973,7 +1971,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        bottom: window.innerHeight,
 	        right: window.innerWidth
 	    };
-
 	    var inViewport = rect.bottom >= viewport.top + height * offset && rect.right >= viewport.left + width * offset && rect.top <= viewport.bottom - height * offset && rect.left <= viewport.right - width * offset;
 	    return inViewport;
 	}

@@ -417,7 +417,6 @@ var GPTMock = function () {
         value: function defineSlot(adUnitPath, size, divId) {
             var slot = new SlotMock(adUnitPath, size, divId);
             this.pubads().slots[divId] = slot;
-
             return slot;
         }
     }, {

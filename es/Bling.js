@@ -124,7 +124,6 @@ var Bling = (_temp2 = _class = function (_Component) {
             this._isMounted = true;
 
             Bling._adManager.addInstance(this);
-
             Bling._adManager.load(Bling._config.seedFileUrl).then(this.onScriptLoaded.bind(this)).catch(this.onScriptError.bind(this));
         }
 
@@ -461,7 +460,6 @@ var Bling = (_temp2 = _class = function (_Component) {
         key: "clear",
         value: function clear() {
             var adSlot = this._adSlot;
-
             if (adSlot && adSlot.hasOwnProperty("getServices")) {
                 // googletag.ContentService doesn't clear content
                 var services = adSlot.getServices();
