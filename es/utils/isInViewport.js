@@ -29,6 +29,7 @@ function isInViewport(el) {
         bottom: window.innerHeight,
         right: window.innerWidth
     };
+
     var inViewport = rect.bottom >= viewport.top + height * offset && rect.right >= viewport.left + width * offset && rect.top <= viewport.bottom - height * offset && rect.left <= viewport.right - width * offset;
     return inViewport;
 }

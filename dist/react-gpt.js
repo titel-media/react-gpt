@@ -528,7 +528,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            args[_key] = arguments[_key];
 	        }
 
-	        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Bling.__proto__ || Object.getPrototypeOf(Bling)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
+	        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Bling.__proto__ || Object.getPrototypeOf(Bling)).call.apply(_ref, [this].concat(args))), _this), _this._isMounted = false, _this.state = {
 	            scriptLoaded: false,
 	            inViewport: false
 	        }, _temp), _possibleConstructorReturn(_this, _ret);
@@ -567,7 +567,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _createClass(Bling, [{
 	        key: "componentDidMount",
 	        value: function componentDidMount() {
+	            this._isMounted = true;
+
 	            Bling._adManager.addInstance(this);
+
 	            Bling._adManager.load(Bling._config.seedFileUrl).then(this.onScriptLoaded.bind(this)).catch(this.onScriptError.bind(this));
 	        }
 
@@ -653,6 +656,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: "componentWillUnmount",
 	        value: function componentWillUnmount() {
+	            this._isMounted = false;
+
 	            Bling._adManager.removeInstance(this);
 	            if (this._adSlot) {
 	                Bling._adManager.googletag.destroySlots([this._adSlot]);
@@ -665,10 +670,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var onScriptLoaded = this.props.onScriptLoaded;
 
 
-	            if (this.getRenderWhenViewable()) {
+	            if (this.el && this.getRenderWhenViewable()) {
 	                this.foldCheck();
 	            }
-	            this.setState({ scriptLoaded: true }, onScriptLoaded); // eslint-disable-line react/no-did-mount-set-state
+
+	            if (this._isMounted) {
+	                this.setState({ scriptLoaded: true }, onScriptLoaded); // eslint-disable-line react/no-did-mount-set-state
+	            }
 	        }
 	    }, {
 	        key: "onScriptError",
@@ -698,6 +706,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 
 	            var inViewport = Bling._adManager.isInViewport(_reactDom2.default.findDOMNode(this), slotSize, this.viewableThreshold);
+
 	            if (inViewport) {
 	                this.setState({ inViewport: true });
 	            }
@@ -888,9 +897,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	            if (content) {
 	                Bling._adManager.googletag.content().setContent(adSlot, content);
 	            } else {
-	                if (!Bling._adManager._disableInitialLoad && !Bling._adManager._syncCorrelator) {
-	                    Bling._adManager.updateCorrelator();
-	                }
 	                Bling._adManager.googletag.display(divId);
 	                if (Bling._adManager._disableInitialLoad && !Bling._adManager._initialRender) {
 	                    this.refresh();
@@ -901,6 +907,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: "clear",
 	        value: function clear() {
 	            var adSlot = this._adSlot;
+
 	            if (adSlot && adSlot.hasOwnProperty("getServices")) {
 	                // googletag.ContentService doesn't clear content
 	                var services = adSlot.getServices();
@@ -925,6 +932,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: "render",
 	        value: function render() {
+	            var _this2 = this;
+
 	            var scriptLoaded = this.state.scriptLoaded;
 	            var _props3 = this.props,
 	                id = _props3.id,
@@ -952,7 +961,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    height: slotSize[1]
 	                };
 	                // render node element instead of script element so that `inViewport` check works.
-	                return _react2.default.createElement("div", { style: emptyStyle });
+	                return _react2.default.createElement("div", { ref: function ref(div) {
+	                        return _this2.el = div;
+	                    }, style: emptyStyle });
 	            }
 
 	            // clear the current ad if exists
@@ -1115,18 +1126,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: "clear",
 	        value: function clear(slots) {
 	            Bling._adManager.clear(slots);
-	        }
-	        /**
-	         * Updates the correlator value for the next ad request.
-	         *
-	         * @method updateCorrelator
-	         * @static
-	         */
-
-	    }, {
-	        key: "updateCorrelator",
-	        value: function updateCorrelator() {
-	            Bling._adManager.updateCorrelator();
 	        }
 	    }, {
 	        key: "testManager",
@@ -1516,10 +1515,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            // first instance updates correlator value and re-render each ad
 	            var instances = _this.getMountedInstances();
-	            instances.forEach(function (instance, i) {
-	                if (i === 0) {
-	                    _this.updateCorrelator();
-	                }
+	            instances.forEach(function (instance) {
 	                instance.forceUpdate();
 	            });
 
@@ -1783,16 +1779,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	            return this.googletag.pubads().getVersion();
 	        }
 	    }, {
-	        key: "updateCorrelator",
-	        value: function updateCorrelator() {
-	            if (!this.pubadsReady) {
-	                return false;
-	            }
-	            this.googletag.pubads().updateCorrelator();
-
-	            return true;
-	        }
-	    }, {
 	        key: "load",
 	        value: function load(url) {
 	            var _this7 = this;
@@ -1987,6 +1973,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        bottom: window.innerHeight,
 	        right: window.innerWidth
 	    };
+
 	    var inViewport = rect.bottom >= viewport.top + height * offset && rect.right >= viewport.left + width * offset && rect.top <= viewport.bottom - height * offset && rect.left <= viewport.right - width * offset;
 	    return inViewport;
 	}
