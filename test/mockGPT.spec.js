@@ -3,8 +3,7 @@ import {
     SlotMock,
     SizeMappingBuilderMock,
     PubAdsServiceMock,
-    CompanionAdsServiceMock,
-    ContentServiceMock
+    CompanionAdsServiceMock
 } from "../src/utils/mockGPT";
 import {gptVersion} from "../src/utils/apiList";
 
@@ -45,11 +44,6 @@ describe("mockGPT", () => {
         expect(companionAdsService).to.be.an.instanceof(
             CompanionAdsServiceMock
         );
-    });
-
-    it("returns contentService from content()", () => {
-        const contentService = gptMock.content();
-        expect(contentService).to.be.an.instanceof(ContentServiceMock);
     });
 
     it("returns slot from defineSlot()", () => {

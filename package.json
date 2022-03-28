@@ -1,6 +1,6 @@
 {
     "name": "@titelmedia/react-gpt",
-    "version": "2.2.0",
+    "version": "3.0.0",
     "description": "A react display ad component using Google Publisher Tag",
     "main": "lib/index.js",
     "jsnext:main": "es/index.js",

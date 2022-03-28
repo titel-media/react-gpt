@@ -89,12 +89,6 @@ class Bling extends Component {
             PropTypes.object
         ]),
         /**
-         * An optional HTML content for the slot. If specified, the ad will render with the HTML content using content service.
-         *
-         * @property content
-         */
-        content: PropTypes.string,
-        /**
          * An optional click through URL. If specified, any landing page URL associated with the creative that is served is overridden.
          *
          * @property clickUrl
@@ -227,13 +221,7 @@ class Bling extends Component {
      * @property reRenderProps
      * @static
      */
-    static reRenderProps = [
-        "adUnitPath",
-        "slotSize",
-        "outOfPage",
-        "content",
-        "npa"
-    ];
+    static reRenderProps = ["adUnitPath", "slotSize", "outOfPage", "npa"];
     /**
      * An instance of ad manager.
      *
@@ -653,7 +641,6 @@ class Bling extends Component {
             categoryExclusion,
             collapseEmptyDiv,
             safeFrameConfig,
-            content,
             clickUrl,
             forceSafeFrame
         } = props;
@@ -705,40 +692,24 @@ class Bling extends Component {
         }
 
         // GPT checks if the same service is already added.
-        if (content) {
-            adSlot.addService(Bling._adManager.googletag.content());
-        } else {
-            adSlot.addService(Bling._adManager.googletag.pubads());
-        }
+        adSlot.addService(Bling._adManager.googletag.pubads());
     }
 
     display() {
-        const {content} = this.props;
         const divId = this._divId;
-        const adSlot = this._adSlot;
 
-        if (content) {
-            Bling._adManager.googletag.content().setContent(adSlot, content);
-        } else {
-            Bling._adManager.googletag.display(divId);
-            if (
-                Bling._adManager._disableInitialLoad &&
-                !Bling._adManager._initialRender
-            ) {
-                this.refresh();
-            }
+        Bling._adManager.googletag.display(divId);
+        if (
+            Bling._adManager._disableInitialLoad &&
+            !Bling._adManager._initialRender
+        ) {
+            this.refresh();
         }
     }
 
     clear() {
         const adSlot = this._adSlot;
         if (adSlot && adSlot.hasOwnProperty("getServices")) {
-            // googletag.ContentService doesn't clear content
-            const services = adSlot.getServices();
-            if (this._divId && services.some(s => !!s.setContent)) {
-                document.getElementById(this._divId).innerHTML = "";
-                return;
-            }
             Bling._adManager.clear([adSlot]);
         }
     }

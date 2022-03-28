@@ -17,7 +17,6 @@ export const gptAPI = [
     ["destroySlots", "function"],
     ["display", "function"],
     ["companionAds", "function"],
-    ["content", "function"],
     ["debug_log", "object"],
     ["service_manager_instance", "object"],
     ["disablePublisherConsole", "function"],

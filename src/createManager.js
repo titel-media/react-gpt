@@ -189,7 +189,9 @@ export class AdManager extends EventEmitter {
                 Events.SLOT_VISIBILITY_CHANGED,
                 Events.SLOT_LOADED
             ].forEach(eventType => {
-                ["pubads", "content", "companionAds"].forEach(service => {
+                // We have removed the "content" service because it is deprecated
+                // See https://developers.google.com/publisher-tag/reference#googletag.ContentService
+                ["pubads", "companionAds"].forEach(service => {
                     // there is no API to remove listeners.
                     this.googletag[service]().addEventListener(
                         eventType,
