@@ -825,7 +825,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	                categoryExclusion = props.categoryExclusion,
 	                collapseEmptyDiv = props.collapseEmptyDiv,
 	                safeFrameConfig = props.safeFrameConfig,
-	                content = props.content,
 	                clickUrl = props.clickUrl,
 	                forceSafeFrame = props.forceSafeFrame;
 
@@ -879,27 +878,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 
 	            // GPT checks if the same service is already added.
-	            if (content) {
-	                adSlot.addService(Bling._adManager.googletag.content());
-	            } else {
-	                adSlot.addService(Bling._adManager.googletag.pubads());
-	            }
+	            adSlot.addService(Bling._adManager.googletag.pubads());
 	        }
 	    }, {
 	        key: "display",
 	        value: function display() {
-	            var content = this.props.content;
-
 	            var divId = this._divId;
-	            var adSlot = this._adSlot;
 
-	            if (content) {
-	                Bling._adManager.googletag.content().setContent(adSlot, content);
-	            } else {
-	                Bling._adManager.googletag.display(divId);
-	                if (Bling._adManager._disableInitialLoad && !Bling._adManager._initialRender) {
-	                    this.refresh();
-	                }
+	            Bling._adManager.googletag.display(divId);
+	            if (Bling._adManager._disableInitialLoad && !Bling._adManager._initialRender) {
+	                this.refresh();
 	            }
 	        }
 	    }, {
@@ -907,14 +895,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        value: function clear() {
 	            var adSlot = this._adSlot;
 	            if (adSlot && adSlot.hasOwnProperty("getServices")) {
-	                // googletag.ContentService doesn't clear content
-	                var services = adSlot.getServices();
-	                if (this._divId && services.some(function (s) {
-	                    return !!s.setContent;
-	                })) {
-	                    document.getElementById(this._divId).innerHTML = "";
-	                    return;
-	                }
 	                Bling._adManager.clear([adSlot]);
 	            }
 	        }
@@ -1196,12 +1176,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	     */
 	    companionAdService: _propTypes2.default.oneOfType([_propTypes2.default.bool, _propTypes2.default.object]),
 	    /**
-	     * An optional HTML content for the slot. If specified, the ad will render with the HTML content using content service.
-	     *
-	     * @property content
-	     */
-	    content: _propTypes2.default.string,
-	    /**
 	     * An optional click through URL. If specified, any landing page URL associated with the creative that is served is overridden.
 	     *
 	     * @property clickUrl
@@ -1303,7 +1277,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @property npa
 	     */
 	    npa: _propTypes2.default.bool
-	}, _class.refreshableProps = ["targeting", "sizeMapping", "clickUrl", "categoryExclusion", "attributes", "collapseEmptyDiv", "companionAdService", "forceSafeFrame", "safeFrameConfig"], _class.reRenderProps = ["adUnitPath", "slotSize", "outOfPage", "content", "npa"], _class._adManager = (0, _createManager.createManager)(), _class._config = {
+	}, _class.refreshableProps = ["targeting", "sizeMapping", "clickUrl", "categoryExclusion", "attributes", "collapseEmptyDiv", "companionAdService", "forceSafeFrame", "safeFrameConfig"], _class.reRenderProps = ["adUnitPath", "slotSize", "outOfPage", "npa"], _class._adManager = (0, _createManager.createManager)(), _class._config = {
 	    /**
 	     * An optional string for GPT seed file url to override.
 	     */
@@ -1588,7 +1562,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            if (!this._listening) {
 	                [_Events2.default.SLOT_RENDER_ENDED, _Events2.default.IMPRESSION_VIEWABLE, _Events2.default.SLOT_VISIBILITY_CHANGED, _Events2.default.SLOT_LOADED].forEach(function (eventType) {
-	                    ["pubads", "content", "companionAds"].forEach(function (service) {
+	                    // We have removed the "content" service because it is deprecated
+	                    // See https://developers.google.com/publisher-tag/reference#googletag.ContentService
+	                    ["pubads", "companionAds"].forEach(function (service) {
 	                        // there is no API to remove listeners.
 	                        _this4.googletag[service]().addEventListener(eventType, _this4._onEvent.bind(_this4, eventType));
 	                    });

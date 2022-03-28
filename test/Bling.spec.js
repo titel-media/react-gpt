@@ -513,24 +513,6 @@ describe("Bling", () => {
         );
     });
 
-    it("renders static ad", done => {
-        const content = `<a href="www.mydestinationsite.com"><img src="www.mysite.com/img.png"></img></a>`;
-
-        Bling.once(Events.RENDER, () => {
-            const adSlot = instance.adSlot;
-            expect(adSlot._content).to.equal(content);
-            done();
-        });
-
-        const instance = ReactTestUtils.renderIntoDocument(
-            <Bling
-                adUnitPath="/4595/nfl.test.open"
-                content={content}
-                slotSize={[300, 250]}
-            />
-        );
-    });
-
     it("does not render ad when renderWhenViewable prop is set to true and the component is not in viewport", done => {
         const isInViewport = sinon.stub(
             Bling._adManager,

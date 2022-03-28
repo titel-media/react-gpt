@@ -194,14 +194,6 @@ class CompanionAdsServiceMock extends BaseService {
         }
     }
 }
-class ContentServiceMock extends BaseService {
-    constructor(config = {}) {
-        super(config);
-    }
-    setContent(slot, content) {
-        slot._content = content;
-    }
-}
 
 class GPTMock {
     constructor(config = {}) {
@@ -238,12 +230,6 @@ class GPTMock {
             this._companionAds = new CompanionAdsServiceMock(this.config);
         }
         return this._companionAds;
-    }
-    content() {
-        if (!this._content) {
-            this._content = new ContentServiceMock(this.config);
-        }
-        return this._content;
     }
     defineSlot(adUnitPath, size, divId) {
         const slot = new SlotMock(adUnitPath, size, divId);
@@ -285,6 +271,5 @@ export {
     SlotMock,
     SizeMappingBuilderMock,
     PubAdsServiceMock,
-    CompanionAdsServiceMock,
-    ContentServiceMock
+    CompanionAdsServiceMock
 };
