@@ -1,6 +1,5 @@
 /* eslint-disable react/no-multi-comp */
 import React, {Component} from "react";
-import PropTypes from "prop-types";
 import ReactTestUtils from "react-dom/test-utils";
 import ShallowRenderer from "react-test-renderer/shallow";
 import Bling from "../src/Bling";
@@ -379,9 +378,6 @@ describe("Bling", () => {
         });
 
         class Wrapper extends Component {
-            static propTypes = {
-                children: PropTypes.node
-            };
             render() {
                 return <div>{this.props.children}</div>;
             }
@@ -433,9 +429,6 @@ describe("Bling", () => {
         });
 
         class Wrapper extends Component {
-            static propTypes = {
-                children: PropTypes.node
-            };
             render() {
                 return <div>{this.props.children}</div>;
             }
@@ -531,9 +524,6 @@ describe("Bling", () => {
         }
 
         class Wrapper extends Component {
-            static propTypes = {
-                children: PropTypes.node
-            };
             render() {
                 return <div>{this.props.children}</div>;
             }
@@ -581,9 +571,6 @@ describe("Bling", () => {
         }
 
         class Wrapper extends Component {
-            static propTypes = {
-                children: PropTypes.node
-            };
             render() {
                 return <div>{this.props.children}</div>;
             }

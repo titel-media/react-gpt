@@ -1,6 +1,5 @@
 /* eslint-disable react/no-multi-comp */
 import React, {Component} from "react";
-import PropTypes from "prop-types";
 import createHistory from "history/createHashHistory";
 import {Bling as Gpt} from "react-gpt"; // eslint-disable-line import/no-unresolved
 import "../log";
@@ -12,12 +11,6 @@ Gpt.syncCorrelator();
 Gpt.enableSingleRequest();
 
 class App extends Component {
-    static propTypes = {
-        location: PropTypes.object,
-        history: PropTypes.object,
-        children: PropTypes.node
-    };
-
     createHref(path) {
         return `${window.location.origin}${window.location.pathname}#${path}`;
     }

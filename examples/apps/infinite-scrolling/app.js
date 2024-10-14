@@ -1,11 +1,14 @@
 /* eslint-disable react/sort-comp */
 import React, {Component} from "react";
 import Radium from "radium";
-import debounce from "throttle-debounce/debounce";
+import debounce from "lodash/debounce";
 import {Bling as Gpt, Events} from "react-gpt"; // eslint-disable-line import/no-unresolved
 import "../log";
 import Content from "./content";
 import styles from "./styles";
+
+const debounceFn = (time, cbFn) =>
+    debounce(cbFn, time, {leading: false, trailing: true});
 
 Gpt.syncCorrelator();
 Gpt.enableSingleRequest();
@@ -40,7 +43,7 @@ class App extends Component {
         window.removeEventListener("resize", this.onScroll);
         this.stopTimer();
     }
-    onScroll = debounce(66, () => {
+    onScroll = debounceFn(66, () => {
         const scrollTop = window.scrollY || document.documentElement.scrollTop;
         if (scrollTop + window.innerHeight >= document.body.clientHeight) {
             this.setState({

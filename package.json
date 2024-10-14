@@ -1,6 +1,6 @@
 {
     "name": "@titelmedia/react-gpt",
-    "version": "4.0.0",
+    "version": "5.0.0",
     "description": "A react display ad component using Google Publisher Tag",
     "main": "lib/index.js",
     "jsnext:main": "es/index.js",
@@ -34,12 +34,9 @@
         "lib"
     ],
     "dependencies": {
-        "deep-equal": "^1.0.1",
-        "eventemitter3": "^2.0.2",
-        "exenv": "^1.2.2",
+        "eventemitter3": "^5.0.1",
         "hoist-non-react-statics": "^3.3.2",
-        "invariant": "^2.2.2",
-        "throttle-debounce": "^1.0.1"
+        "lodash": "^4.17.21"
     },
     "devDependencies": {
         "babel-cli": "^6.5.1",
@@ -82,7 +79,6 @@
         "mocha": "^3.1.2",
         "phantom": "^2.0.4",
         "prettier": "^1.9.2",
-        "prop-types": "^15.5.10",
         "querystring": "^0.2.0",
         "radium": "^0.18.1",
         "react": "^16.0.0",
@@ -98,9 +94,8 @@
         "webpack-dev-server": "^1.14.1"
     },
     "peerDependencies": {
-        "prop-types": "^15.5.10",
-        "react": "^15.0.1 || ^16.0.0 || ^17.0.0",
-        "react-dom": "^15.0.1 || ^16.0.0 || ^17.0.0"
+        "react": "*",
+        "react-dom": "*"
     },
     "scripts": {
         "commit": "git-cz",

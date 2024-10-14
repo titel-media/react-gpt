@@ -1,5 +1,4 @@
 import React, {Component} from "react";
-import PropTypes from "prop-types";
 import Radium from "radium";
 import {Bling as Gpt} from "react-gpt"; // eslint-disable-line import/no-unresolved
 import styles from "./styles/content";
@@ -23,10 +22,6 @@ const bg = ["#90C3D4", "#FAD9EA", "#FCFCB1"];
 
 @Radium
 class Content extends Component {
-    static propTypes = {
-        index: PropTypes.number,
-        targeting: PropTypes.object
-    };
     render() {
         const {index, targeting} = this.props;
         let ad;

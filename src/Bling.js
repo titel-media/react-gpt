@@ -1,9 +1,7 @@
 /* eslint-disable react/sort-comp */
 import React, {Component} from "react";
-import PropTypes from "prop-types";
 import ReactDOM from "react-dom";
-import invariant from "invariant";
-import deepEqual from "deep-equal";
+import isEqual from "lodash/fp/isEqual";
 import hoistStatics from "hoist-non-react-statics";
 import Events from "./Events";
 import filterPropsSimple from "./utils/filterProps";
@@ -22,182 +20,6 @@ import {createManager, pubadsAPI} from "./createManager";
  * @fires Bling#Events.SLOT_LOADED
  */
 class Bling extends Component {
-    static propTypes = {
-        /**
-         * An optional string to be used as container div id.
-         *
-         * @property id
-         */
-        id: PropTypes.string,
-        /**
-         * An optional string indicating ad unit path which will be used
-         * to create an ad slot.
-         *
-         * @property adUnitPath
-         */
-        adUnitPath: PropTypes.string.isRequired,
-        /**
-         * An optional object which includes ad targeting key-value pairs.
-         *
-         * @property targeting
-         */
-        targeting: PropTypes.object,
-        /**
-         * An optional prop to specify the ad slot size which accepts [googletag.GeneralSize](https://developers.google.com/doubleclick-gpt/reference#googletag.GeneralSize) as a type.
-         * This will be preceded by the sizeMapping if specified.
-         *
-         * @property slotSize
-         */
-        slotSize: PropTypes.oneOfType([PropTypes.array, PropTypes.string]),
-        /**
-         * An optional array of object which contains an array of viewport size and slot size.
-         * This needs to be set if the ad needs to serve different ad sizes per different viewport sizes (responsive ad).
-         * Setting the `slot` to any dimension that's not configured in DFP results in rendering an empty ad.
-         * The ad slot size which is provided for the viewport size of [0, 0] will be used as default ad size if none of viewport size matches.
-         *
-         * https://support.google.com/dfp_premium/answer/3423562?hl=en
-         *
-         * e.g.
-         *
-         * sizeMapping={[
-         *   {viewport: [0, 0], slot: [320, 50]},
-         *   {viewport: [768, 0], slot: [728, 90]}
-         * ]}
-         *
-         * @property sizeMapping
-         */
-        sizeMapping: PropTypes.arrayOf(
-            PropTypes.shape({
-                viewport: PropTypes.array,
-                slot: PropTypes.array
-            })
-        ),
-        /**
-         * An optional flag to indicate whether an ad slot should be out-of-page slot.
-         *
-         * @property outOfPage
-         */
-        outOfPage: PropTypes.bool,
-        /**
-         * An optional flag to indicate whether companion ad service should be enabled for the ad.
-         * If an object is passed, it takes as a configuration expecting `enableSyncLoading` or `refreshUnfilledSlots`.
-         *
-         * @property companionAdService
-         */
-        companionAdService: PropTypes.oneOfType([
-            PropTypes.bool,
-            PropTypes.object
-        ]),
-        /**
-         * An optional click through URL. If specified, any landing page URL associated with the creative that is served is overridden.
-         *
-         * @property clickUrl
-         */
-        clickUrl: PropTypes.string,
-        /**
-         * An optional string or an array of string which specifies a page-level ad category exclusion for the given label name.
-         *
-         * @property categoryExclusion
-         */
-        categoryExclusion: PropTypes.oneOfType([
-            PropTypes.string,
-            PropTypes.array
-        ]),
-        /**
-         * An optional map of key-value pairs for an AdSense attribute on a particular ad slot.
-         * see the list of supported key value: https://developers.google.com/doubleclick-gpt/adsense_attributes#adsense_parameters.googletag.Slot
-         *
-         * @property attributes
-         */
-        attributes: PropTypes.object,
-        /**
-         * An optional flag to indicate whether an empty ad should be collapsed or not.
-         *
-         * @property collapseEmptyDiv
-         */
-        collapseEmptyDiv: PropTypes.oneOfType([
-            PropTypes.bool,
-            PropTypes.array
-        ]),
-        /**
-         * An optional flag to indicate whether ads in this slot should be forced to be rendered using a SafeFrame container.
-         *
-         * @property forceSafeFrame
-         */
-        forceSafeFrame: PropTypes.bool,
-        /**
-         * An optional object to set the slot-level preferences for SafeFrame configuration.
-         *
-         * @property safeFrameConfig
-         */
-        safeFrameConfig: PropTypes.object,
-        /**
-         * An optional event handler function for `googletag.events.SlotRenderEndedEvent`.
-         *
-         * @property onSlotRenderEnded
-         */
-        onSlotRenderEnded: PropTypes.func,
-        /**
-         * An optional event handler function for `googletag.events.ImpressionViewableEvent`.
-         *
-         * @property onImpressionViewable
-         */
-        onImpressionViewable: PropTypes.func,
-        /**
-         * An optional event handler function for `googletag.events.slotVisibilityChangedEvent`.
-         *
-         * @property onSlotVisibilityChanged
-         */
-        onSlotVisibilityChanged: PropTypes.func,
-        /**
-         * An optional event handler function for `googletag.events.SlotOnloadEvent`.
-         *
-         * @property onSlotOnload
-         */
-        onSlotOnload: PropTypes.func,
-        /**
-         * An optional flag to indicate whether an ad should only render when it's fully in the viewport area.
-         *
-         * @property renderWhenViewable
-         */
-        renderWhenViewable: PropTypes.bool,
-        /**
-         * An optional number to indicate how much percentage of an ad area needs to be in a viewable area before rendering.
-         * Acceptable range is between 0 and 1.
-         *
-         * @property viewableThreshold
-         */
-        viewableThreshold: PropTypes.number,
-        /**
-         * An optional call back function to notify when the script is loaded.
-         *
-         * @property onScriptLoaded
-         */
-        onScriptLoaded: PropTypes.func,
-        /**
-         * An optional call back function to notify when the media queries on the document change.
-         *
-         * @property onMediaQueryChange
-         */
-        onMediaQueryChange: PropTypes.func,
-        /**
-         * An optional object to be applied as `style` props to the container div.
-         *
-         * @property style
-         */
-        style: PropTypes.object,
-        /**
-         * An optional property to control non-personalized Ads.
-         * https://support.google.com/admanager/answer/7678538
-         *
-         * Set to `true` to mark the ad request as NPA, and to `false` for ad requests that are eligible for personalized ads
-         * It is `false` by default, according to Google's definition.
-         *
-         * @property npa
-         */
-        npa: PropTypes.bool
-    };
-
     /**
      * An array of prop names which can reflect to the ad by calling `refresh`.
      *
@@ -257,7 +79,7 @@ class Bling extends Component {
         /**
          * An optional function for the filtered props and the next props to perform equality check.
          */
-        propsEqual: deepEqual
+        propsEqual: isEqual
     };
 
     static on(eventType, cb) {
@@ -354,7 +176,9 @@ class Bling extends Component {
     }
 
     static set testManager(testManager) {
-        invariant(testManager, "Pass in createManagerTest to mock GPT");
+        if (!testManager) {
+            throw new Error("Pass in createManagerTest to mock GPT");
+        }
         Bling._adManager = testManager;
     }
 
@@ -731,10 +555,11 @@ class Bling extends Component {
             let slotSize = this.getSlotSize();
 
             if (!outOfPage) {
-                invariant(
-                    slotSize,
-                    "Either 'slotSize' or 'sizeMapping' prop needs to be set."
-                );
+                if (!slotSize) {
+                    throw new Error(
+                        "Either 'slotSize' or 'sizeMapping' prop needs to be set."
+                    );
+                }
             }
 
             if (Array.isArray(slotSize) && Array.isArray(slotSize[0])) {

@@ -1,9 +1,20 @@
 import EventEmitter from "eventemitter3";
-import {debounce, throttle} from "throttle-debounce";
-import invariant from "invariant";
-import {canUseDOM} from "exenv";
+import debounce from "lodash/debounce";
+import throttle from "lodash/throttle";
 import Events from "./Events";
 import isInViewport from "./utils/isInViewport";
+
+const throttleFn = (time, cbFn) =>
+    throttle(cbFn, time, {leading: true, trailing: true});
+
+const debounceFn = (time, cbFn) =>
+    debounce(cbFn, time, {leading: false, trailing: true});
+
+const canUseDOM = !!(
+    typeof window !== "undefined" &&
+    window.document &&
+    window.document.createElement
+);
 
 // based on https://developers.google.com/doubleclick-gpt/reference?hl=en
 export const pubadsAPI = [
@@ -89,10 +100,11 @@ export class AdManager extends EventEmitter {
         this._testMode = !!test;
 
         if (test) {
-            invariant(
-                test && GPTMock,
-                "Must provide GPTMock to enable testMode. config{GPTMock}"
-            );
+            if (!(test && GPTMock)) {
+                throw new Error(
+                    "Must provide GPTMock to enable testMode. config{GPTMock}"
+                );
+            }
             this._googletag = new GPTMock(config);
         }
     }
@@ -144,7 +156,7 @@ export class AdManager extends EventEmitter {
         });
     }
 
-    _foldCheck = throttle(20, event => {
+    _foldCheck = throttleFn(20, event => {
         const instances = this.getMountedInstances();
         instances.forEach(instance => {
             if (instance.getRenderWhenViewable()) {
@@ -205,7 +217,7 @@ export class AdManager extends EventEmitter {
 
     _onEvent(eventType, event) {
         // fire to the global listeners
-        if (this.listeners(eventType, true)) {
+        if (this.listenerCount(eventType) > 0) {
             this.emit(eventType, event);
         }
         // call event handler props
@@ -342,7 +354,7 @@ export class AdManager extends EventEmitter {
         return true;
     }
 
-    render = debounce(4, () => {
+    render = debounceFn(4, () => {
         if (!this._initialRender) {
             return;
         }
@@ -422,7 +434,7 @@ export class AdManager extends EventEmitter {
      * @method renderAll
      * @static
      */
-    renderAll = debounce(4, () => {
+    renderAll = debounceFn(4, () => {
         if (!this.apiReady) {
             return false;
         }
